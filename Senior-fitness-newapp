@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Senior Fitness & Brain App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --main: #0b7a6f;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --text: #333333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--main);
+      color: white;
+      text-align: center;
+      padding: 1rem 0.8rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    header p {
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
+    }
+
+    main {
+      padding: 1rem;
+      max-width: 900px;
+      margin: 0 auto 2rem;
+    }
+
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-buttons button {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      background: #e0e0e0;
+      font-size: 0.95rem;
+    }
+
+    .tab-buttons button.active {
+      background: var(--main);
+      color: white;
+      font-weight: 600;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      margin-top: 0.6rem;
+      font-size: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #cfd8dc;
+      margin-top: 0.2rem;
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .small-note {
+      font-size: 0.8rem;
+      color: #616161;
+      margin-top: 0.3rem;
+    }
+
+    .big-button {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--main);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 0.8rem;
+    }
+
+    .secondary-button {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid var(--main);
+      background: #e0f2f1;
+      color: #004d40;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-top: 0.6rem;
+    }
+
+    .exercise-day {
+      margin-bottom: 1rem;
+    }
+
+    .exercise {
+      margin-bottom: 0.8rem;
+      border-top: 1px solid #eceff1;
+      padding-top: 0.6rem;
+    }
+
+    .exercise:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .exercise-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .exercise-text {
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .exercise-reps {
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+      font-weight: 600;
+    }
+
+    .exercise-images {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .img-placeholder {
+      flex: 1;
+      border-radius: 8px;
+      border: 2px dashed #b0bec5;
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .img-placeholder span {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .chip-row span {
+      font-size: 0.8rem;
+      background: #e0f2f1;
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .difficulty-select {
+      margin-bottom: 0.5rem;
+    }
+
+    .difficulty-select label {
+      margin-bottom: 0.3rem;
+    }
+
+    /* Cognitive: Memory game */
+
+    .memory-display {
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.4rem;
+      margin: 0.6rem 0;
+    }
+
+    .status-text {
+      font-size: 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Cognitive: Reaction game */
+
+    .top-color-display {
+      height: 70px;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      border: 2px solid #cfd8dc;
+    }
+
+    .top-color-display.red {
+      background: #e53935;
+    }
+
+    .top-color-display.blue {
+      background: #1e88e5;
+    }
+
+    .top-color-display.green {
+      background: #43a047;
+    }
+
+    .top-color-display.yellow {
+      background: #fdd835;
+    }
+
+    .color-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .color-btn {
+      flex: 1;
+      border-radius: 10px;
+      border: none;
+      padding: 1.2rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .color-btn.red {
+      background: #e53935;
+    }
+
+    .color-btn.blue {
+      background: #1e88e5;
+    }
+
+    .color-btn.green {
+      background: #43a047;
+    }
+
+    .color-btn.yellow {
+      background: #fdd835;
+      color: #000000;
+    }
+
+    .reaction-info {
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+      color: #616161;
+    }
+
+    @media (min-width: 768px) {
+      header h1 {
+        font-size: 1.6rem;
+      }
+
+      main {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Senior Fitness & Brain Training</h1>
+    <p>Stronger body. Sharper mind. Safe & simple.</p>
+  </header>
+
+  <main>
+    <!-- Tabs -->
+    <div class="tab-buttons">
+      <button class="active" onclick="showTab('tab-parq')">1️⃣ PAR-Q Form</button>
+      <button onclick="showTab('tab-strength')">2️⃣ Strengthening Program</button>
+      <button onclick="showTab('tab-cognitive')">3️⃣ Cognitive Training</button>
+    </div>
+
+    <!-- PAR-Q TAB -->
+    <section id="tab-parq" class="tab active">
+      <div class="card">
+        <h2>PAR-Q (Physical Activity Readiness Questionnaire)</h2>
+        <p style="font-size:0.9rem;">
+          Please answer this form before starting any exercise. If you answer “Yes” to any question, speak to a doctor or staff before you continue.
+        </p>
+
+        <form id="parq-form">
+          <label>
+            Full Name
+            <input type="text" id="parq-name" required />
+          </label>
+
+          <label>
+            Date
+            <input type="date" id="parq-date" required />
+          </label>
+
+          <label>
+            Mobile Number
+            <input type="tel" id="parq-phone" required />
+          </label>
+
+          <label>
+            1. Has your doctor ever said that you have a heart condition or high blood pressure?
+            <select id="parq-q1" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            2. Do you feel chest pain when you do physical activity?
+            <select id="parq-q2" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            3. Do you lose balance because of dizziness or lose consciousness?
+            <select id="parq-q3" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            4. Do you have any bone or joint problem that could be made worse by exercise?
+            <select id="parq-q4" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            5. Are you taking any medication for blood pressure, heart condition or chest pain?
+            <select id="parq-q5" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            6. Is there any other reason why you should not do physical activity?
+            <select id="parq-q6" required>
+              <option value="">Select...</option>
+              <option>No</option>
+              <option>Yes</option>
+            </select>
+          </label>
+
+          <label>
+            Additional notes (optional)
+            <textarea id="parq-notes" placeholder="Eg. knee pain, using walking stick, recent surgery, etc."></textarea>
+          </label>
+
+          <div class="small-note">
+            By submitting, I understand I should stop exercise immediately if I feel unwell (chest pain, dizziness, strong shortness of breath, severe pain) and seek help.
+          </div>
+
+          <button type="submit" class="big-button">Submit PAR-Q (for screening)</button>
+        </form>
+
+        <button class="secondary-button" type="button" onclick="openOfficialParq()">
+          📋 Open Official PAR-Q Google Form
+        </button>
+
+        <div class="small-note">
+          Use the official Google Form to record answers into the centre’s Google Sheet.
+        </div>
+      </div>
+    </section>
+
+    <!-- STRENGTHENING TAB -->
+    <section id="tab-strength" class="tab">
+      <div class="card">
+        <h2>Strengthening Program (Loop Resistance Bands)</h2>
+        <p style="font-size:0.9rem;">
+          Choose a loop resistance band level that feels <b>challenging but safe</b>. You should still be able to breathe and talk during the exercise.
+        </p>
+
+        <div class="chip-row">
+          <span>✅ Warm-up marching</span>
+          <span>✅ 2-day rotation (Push / Pull)</span>
+          <span>✅ Easy / Medium / Hard</span>
+        </div>
+
+        <div class="difficulty-select">
+          <label>
+            Select difficulty:
+            <select id="strength-level">
+              <option value="easy">Easy (Beginner / Very careful)</option>
+              <option value="medium" selected>Medium (Regular)</option>
+              <option value="hard">Hard (Stronger & safe)</option>
+            </select>
+          </label>
+          <div class="small-note">
+            Easy = lighter band / fewer reps.  
+            Hard = heavier band / more reps.  
+            Rotate <b>Day 1</b> and <b>Day 2</b> on different days.
+          </div>
+        </div>
+      </div>
+
+      <div id="strength-exercises"></div>
+    </section>
+
+    <!-- COGNITIVE TAB -->
+    <section id="tab-cognitive" class="tab">
+      <!-- Memory game -->
+      <div class="card">
+        <h2>Memory Game – Number Recall</h2>
+        <p style="font-size:0.9rem;">
+          A sequence of numbers will appear. Try to remember it, then key it in after it disappears.
+        </p>
+
+        <label>
+          Difficulty:
+          <select id="memory-difficulty">
+            <option value="easy">Easy (3–4 numbers)</option>
+            <option value="medium" selected>Medium (5–6 numbers)</option>
+            <option value="hard">Hard (7–9 numbers)</option>
+          </select>
+        </label>
+
+        <div id="memory-display" class="memory-display">Press “Start”</div>
+
+        <button id="memory-start" class="big-button" type="button">
+          ▶️ Start Memory Game
+        </button>
+
+        <label style="margin-top:0.8rem;">
+          Type what you remember:
+          <input id="memory-input" type="text" inputmode="numeric" />
+        </label>
+        <button id="memory-check" class="big-button" type="button">
+          ✅ Check Answer
+        </button>
+
+        <div id="memory-status" class="status-text"></div>
+      </div>
+
+      <!-- Reaction game -->
+      <div class="card">
+        <h2>Reaction Game – Colour Tap</h2>
+        <p style="font-size:0.9rem;">
+          When a colour appears at the top, tap the <b>same colour button</b> as fast as you can.
+        </p>
+
+        <label>
+          Difficulty:
+          <select id="reaction-difficulty">
+            <option value="easy">Easy (within 2 seconds)</option>
+            <option value="medium" selected>Medium (within 1 second)</option>
+            <option value="hard">Hard (within 0.5 seconds)</option>
+          </select>
+        </label>
+
+        <div id="reaction-target" class="top-color-display"></div>
+
+        <button id="reaction-start" class="big-button" type="button">
+          ▶️ Start Reaction Round
+        </button>
+
+        <div class="color-buttons">
+          <button class="color-btn red" type="button" onclick="chooseColor('red')">
+            Red
+          </button>
+          <button class="color-btn yellow" type="button" onclick="chooseColor('yellow')">
+            Yellow
+          </button>
+          <button class="color-btn blue" type="button" onclick="chooseColor('blue')">
+            Blue
+          </button>
+          <button class="color-btn green" type="button" onclick="chooseColor('green')">
+            Green
+          </button>
+        </div>
+
+        <div id="reaction-status" class="status-text"></div>
+        <div id="reaction-info" class="reaction-info"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /* =========================
+       TAB SWITCHING
+    ========================== */
+    function showTab(id) {
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.id === id);
+      });
+      document.querySelectorAll(".tab-buttons button").forEach((btn) => {
+        const target =
+          btn.textContent.indexOf("PAR-Q") !== -1
+            ? "tab-parq"
+            : btn.textContent.indexOf("Strength") !== -1
+            ? "tab-strength"
+            : "tab-cognitive";
+        btn.classList.toggle("active", target === id);
+      });
+    }
+
+    /* =========================
+       GOOGLE FORM LINKS
+    ========================== */
+
+    // Seniors' official Google Form (for recording into Sheets)
+    const OFFICIAL_PARQ_FORM_VIEW_URL =
+      "https://docs.google.com/forms/d/1O7XR-HhZWOt0gFWD3TUs6a2BcNFie16ucQT-HFIuWgo/viewform";
+
+    function openOfficialParq() {
+      window.open(OFFICIAL_PARQ_FORM_VIEW_URL, "_blank");
+    }
+
+    // Optional future auto-submit (when you are ready)
+    // Submission URL:
+    const GOOGLE_FORM_URL =
+      "https://docs.google.com/forms/d/1O7XR-HhZWOt0gFWD3TUs6a2BcNFie16ucQT-HFIuWgo/formResponse";
+
+    // When you know the field IDs, fill these:
+    const FIELD_NAME = "";  // e.g. "entry.123456"
+    const FIELD_DATE = "";
+    const FIELD_PHONE = "";
+    const FIELD_NOTES = "";
+
+    function sendParqToGoogleForm(parq) {
+      // Safety: do nothing until FIELD_NAME is filled
+      if (!GOOGLE_FORM_URL || !FIELD_NAME) {
+        return;
+      }
+      const fd = new FormData();
+      fd.append(FIELD_NAME, parq.name || "");
+      if (FIELD_DATE) fd.append(FIELD_DATE, parq.date || "");
+      if (FIELD_PHONE) fd.append(FIELD_PHONE, parq.phone || "");
+      if (FIELD_NOTES) fd.append(FIELD_NOTES, parq.notes || "");
+
+      fetch(GOOGLE_FORM_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: fd,
+      }).catch((err) => {
+        console.warn("Could not send to Google Form:", err);
+      });
+    }
+
+    /* =========================
+       PAR-Q FORM HANDLING
+    ========================== */
+
+    const parqForm = document.getElementById("parq-form");
+    parqForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById("parq-name").value.trim(),
+        date: document.getElementById("parq-date").value,
+        phone: document.getElementById("parq-phone").value.trim(),
+        q1: document.getElementById("parq-q1").value,
+        q2: document.getElementById("parq-q2").value,
+        q3: document.getElementById("parq-q3").value,
+        q4: document.getElementById("parq-q4").value,
+        q5: document.getElementById("parq-q5").value,
+        q6: document.getElementById("parq-q6").value,
+        notes: document.getElementById("parq-notes").value.trim(),
+      };
+
+      // Optional: send to Google Form in background (currently inactive)
+      sendParqToGoogleForm(data);
+
+      alert(
+        "Thank you for completing the PAR-Q (screening).\n\n" +
+          "- If you answered YES to any question, please check with a doctor or staff before doing harder exercise.\n" +
+          "- Stop immediately if you feel chest pain, strong shortness of breath, dizziness or severe pain."
+      );
+      parqForm.reset();
+    });
+
+    /* =========================
+       STRENGTH PROGRAM DATA
+    ========================== */
+
+    const strengthExercises = {
+      day1: [
+        {
+          title: "Warm-up – Seated Marching",
+          desc:
+            "Sit tall on a sturdy chair. Gently march your legs on the spot, swinging arms comfortably.",
+          reps: {
+            easy: "30 seconds",
+            medium: "45–60 seconds",
+            hard: "60–90 seconds",
+          },
+          isBand: false,
+        },
+        {
+          title: "Loop Band Chest Press (Seated)",
+          desc:
+            "Place loop band around your upper back and hold each side at chest level. Push arms forward slowly, then return.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Shoulder Press",
+          desc:
+            "Sit tall. Place loop band under both hands near shoulders. Press hands upward above head, then slowly lower.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Front Raise",
+          desc:
+            "Sit or stand. Hold loop band in both hands on your thighs. Lift straight arms to shoulder height, then lower with control.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Triceps Press (Behind Head)",
+          desc:
+            "Hold loop band with one hand above head and the other hand behind neck. Gently straighten the lower arm, then return.",
+          reps: {
+            easy: "8 reps each arm",
+            medium: "10–12 reps each arm",
+            hard: "12–15 reps each arm",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Seated Leg Extension",
+          desc:
+            "Tie loop band around both ankles. Sit tall and slowly straighten one knee, then return and switch legs.",
+          reps: {
+            easy: "8 reps each leg",
+            medium: "10–12 reps each leg",
+            hard: "12–15 reps each leg",
+          },
+          isBand: true,
+        },
+      ],
+      day2: [
+        {
+          title: "Warm-up – Sit to Stand",
+          desc:
+            "From a chair, stand up and sit down slowly. Use hands on chair if needed.",
+          reps: {
+            easy: "6–8 reps",
+            medium: "8–10 reps",
+            hard: "10–12 reps",
+          },
+          isBand: false,
+        },
+        {
+          title: "Loop Band Seated Row",
+          desc:
+            "Loop band around your feet. Hold each end, sit tall, pull elbows back, squeezing shoulder blades, then slowly release.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Lat Pulldown (from above)",
+          desc:
+            "Anchor loop band above head (door anchor or helper). Hold band with both hands and pull down towards chest, then slowly release.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Biceps Curl",
+          desc:
+            "Sit or stand on the loop band. Hold each side, palms facing up. Bend elbows to lift hands, then lower slowly.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Hip Abduction (Knees Out)",
+          desc:
+            "Sit on chair, loop band around thighs above knees. Open knees out to the side against the band, then slowly bring back.",
+          reps: {
+            easy: "8–10 reps",
+            medium: "10–12 reps",
+            hard: "12–15 reps",
+          },
+          isBand: true,
+        },
+        {
+          title: "Loop Band Standing Hamstring Curl (Hold Chair)",
+          desc:
+            "Stand behind a chair for support. Loop band around ankles. Slowly bend one knee to bring heel towards buttock, then lower. Switch legs.",
+          reps: {
+            easy: "8 reps each leg",
+            medium: "10–12 reps each leg",
+            hard: "12–15 reps each leg",
+          },
+          isBand: true,
+        },
+      ],
+    };
+
+    function renderStrength() {
+      const container = document.getElementById("strength-exercises");
+      const level = document.getElementById("strength-level").value;
+      container.innerHTML = "";
+
+      ["day1", "day2"].forEach((dayKey, index) => {
+        const day = document.createElement("div");
+        day.className = "card exercise-day";
+
+        const dayTitle = document.createElement("h3");
+        dayTitle.textContent =
+          index === 0
+            ? "Day 1 – Push (Chest / Shoulders / Front Legs)"
+            : "Day 2 – Pull (Back / Arms / Back of Legs)";
+        day.appendChild(dayTitle);
+
+        const dayNote = document.createElement("div");
+        dayNote.className = "small-note";
+        dayNote.textContent =
+          "Do 1–3 sets of each exercise. Rest 30–60 seconds between sets. Breathe out on effort, breathe in on return.";
+        day.appendChild(dayNote);
+
+        strengthExercises[dayKey].forEach((ex) => {
+          const exDiv = document.createElement("div");
+          exDiv.className = "exercise";
+
+          const title = document.createElement("div");
+          title.className = "exercise-title";
+          title.textContent = ex.title;
+          exDiv.appendChild(title);
+
+          const text = document.createElement("div");
+          text.className = "exercise-text";
+          text.textContent = ex.desc;
+          exDiv.appendChild(text);
+
+          const reps = document.createElement("div");
+          reps.className = "exercise-reps";
+          reps.textContent = "Target: " + ex.reps[level];
+          exDiv.appendChild(reps);
+
+          if (ex.isBand) {
+            const imgs = document.createElement("div");
+            imgs.className = "exercise-images";
+
+            const imgA = document.createElement("div");
+            imgA.className = "img-placeholder";
+            imgA.innerHTML =
+              "<span>Image A</span>Start position (band set up, posture).";
+            imgs.appendChild(imgA);
+
+            const imgB = document.createElement("div");
+            imgB.className = "img-placeholder";
+            imgB.innerHTML =
+              "<span>Image B</span>End position (band stretched, movement complete).";
+            imgs.appendChild(imgB);
+
+            exDiv.appendChild(imgs);
+          }
+
+          day.appendChild(exDiv);
+        });
+
+        container.appendChild(day);
+      });
+    }
+
+    document
+      .getElementById("strength-level")
+      .addEventListener("change", renderStrength);
+
+    /* =========================
+       COGNITIVE: MEMORY GAME
+    ========================== */
+
+    const memoryDisplay = document.getElementById("memory-display");
+    const memoryInput = document.getElementById("memory-input");
+    const memoryStatus = document.getElementById("memory-status");
+    const memoryStartBtn = document.getElementById("memory-start");
+    const memoryCheckBtn = document.getElementById("memory-check");
+    const memoryDifficulty = document.getElementById("memory-difficulty");
+
+    let currentMemoryNumber = "";
+    let memoryShowing = false;
+
+    function randomDigits(length) {
+      let s = "";
+      for (let i = 0; i < length; i++) {
+        s += Math.floor(Math.random() * 9) + 1; // 1–9
+      }
+      return s;
+    }
+
+    function getMemoryLength(diff) {
+      if (diff === "easy") return Math.floor(Math.random() * 2) + 3; // 3–4
+      if (diff === "medium") return Math.floor(Math.random() * 2) + 5; // 5–6
+      return Math.floor(Math.random() * 3) + 7; // 7–9
+    }
+
+    memoryStartBtn.addEventListener("click", () => {
+      const diff = memoryDifficulty.value;
+      const len = getMemoryLength(diff);
+      currentMemoryNumber = randomDigits(len);
+      memoryShowing = true;
+      memoryInput.value = "";
+      memoryStatus.textContent = "";
+      memoryDisplay.textContent = currentMemoryNumber;
+
+      const showTime = 2000 + len * 400;
+      setTimeout(() => {
+        if (memoryShowing) {
+          memoryDisplay.textContent = "Now type what you remember below.";
+          memoryShowing = false;
+        }
+      }, showTime);
+    });
+
+    memoryCheckBtn.addEventListener("click", () => {
+      if (!currentMemoryNumber) {
+        memoryStatus.textContent = "Press Start first.";
+        return;
+      }
+      const answer = memoryInput.value.trim();
+      if (!answer) {
+        memoryStatus.textContent = "Please type your answer.";
+        return;
+      }
+      if (answer === currentMemoryNumber) {
+        memoryStatus.textContent =
+          "✅ Correct! Well done. Try a harder level or another round.";
+      } else {
+        memoryStatus.textContent =
+          "❌ Not the same. The correct number was: " + currentMemoryNumber;
+      }
+      currentMemoryNumber = "";
+      memoryDisplay.textContent = "Press “Start” for a new sequence.";
+    });
+
+    /* =========================
+       COGNITIVE: REACTION GAME
+    ========================== */
+
+    const reactionTarget = document.getElementById("reaction-target");
+    const reactionStatus = document.getElementById("reaction-status");
+    const reactionInfo = document.getElementById("reaction-info");
+    const reactionStartBtn = document.getElementById("reaction-start");
+    const reactionDifficulty = document.getElementById("reaction-difficulty");
+
+    let currentColor = null;
+    let startTime = null;
+    let bestTime = null;
+
+    const reactionLimits = {
+      easy: 2000,
+      medium: 1000,
+      hard: 500,
+    };
+
+    function startReactionRound() {
+      reactionStatus.textContent = "Get ready…";
+      reactionInfo.textContent = "";
+      reactionTarget.className = "top-color-display";
+      currentColor = null;
+      startTime = null;
+
+      const delay = 500 + Math.random() * 1000;
+      setTimeout(() => {
+        const colors = ["red", "yellow", "blue", "green"];
+        const pick = colors[Math.floor(Math.random() * colors.length)];
+        currentColor = pick;
+        startTime = performance.now();
+        reactionTarget.className = "top-color-display " + pick;
+      }, delay);
+    }
+
+    reactionStartBtn.addEventListener("click", startReactionRound);
+
+    function chooseColor(color) {
+      if (!currentColor || !startTime) {
+        reactionStatus.textContent = "Press Start to begin a new round.";
+        return;
+      }
+      const now = performance.now();
+      const elapsed = now - startTime;
+      const diff = reactionDifficulty.value;
+      const limit = reactionLimits[diff];
+
+      const seconds = (elapsed / 1000).toFixed(2);
+
+      if (color !== currentColor) {
+        reactionStatus.textContent =
+          "❌ Wrong colour. Try to match the top colour exactly.";
+      } else if (elapsed <= limit) {
+        reactionStatus.textContent =
+          "✅ Good reaction! You tapped in " + seconds + " seconds.";
+        if (bestTime === null || elapsed < bestTime) {
+          bestTime = elapsed;
+          reactionInfo.textContent =
+            "🏅 Your best time so far: " + (bestTime / 1000).toFixed(2) + " seconds.";
+        }
+      } else {
+        reactionStatus.textContent =
+          "⚠️ Too slow. You took " +
+          seconds +
+          " seconds. Try to be faster on the next round.";
+      }
+
+      currentColor = null;
+      startTime = null;
+      setTimeout(startReactionRound, 1200);
+    }
+
+    window.chooseColor = chooseColor;
+
+    /* =========================
+       INIT
+    ========================== */
+
+    window.addEventListener("load", () => {
+      renderStrength();
+    });
+  </script>
+</body>
+</html>
